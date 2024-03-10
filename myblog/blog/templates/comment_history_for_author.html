@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Author Comment Count</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+<body>
+    <h1>Author Comment Count</h1>
+    <ul id="author-comment-count-list">
+        {% for author in authors %}
+            <li>{{ author.username }} - Comments: {{ author.comment_count }}</li>
+        {% endfor %}
+    </ul>
+
+    <script>
+        $(document).ready(function() {
+            $.ajax({
+                url: '/author-comment-count/', // Endpoint to fetch author comment count
+                type: 'GET',
+                success: function(data) {
+                    var authorListHtml = '';
+                    $.each(data.authors, function(index, author) {
+                        authorListHtml += '<li>' + author.username + ' - Comments: ' + author.comment_count + '</li>';
+                    });
+                    $('#author-comment-count-list').html(authorListHtml);
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error:', error);
+                }
+            });
+        });
+    </script>
+</body>
+</html>

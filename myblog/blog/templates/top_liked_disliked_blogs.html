@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Top Liked and Disliked Blogs</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Top Liked and Disliked Blogs in the Last 3 Days</h1>
+
+        <div class="row">
+            <div class="col-md-6">
+                <h2>Top 5 Liked Blogs</h2>
+                <ul>
+                    {% for blog in top_liked_blogs %}
+                    <li>
+                        <h3>{{ blog.name }}</h3>
+                        <p>{{ blog.content }}</p>
+                        <p>Likes: {{ blog.likes_count }}</p>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+
+            <div class="col-md-6">
+                <h2>Top 5 Disliked Blogs</h2>
+                <ul>
+                    {% for blog in top_disliked_blogs %}
+                    <li>
+                        <h3>{{ blog.name }}</h3>
+                        <p>{{ blog.content }}</p>
+                        <p>Dislikes: {{ blog.dislikes_count }}</p>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

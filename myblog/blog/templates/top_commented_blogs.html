@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Top Commented Blogs</title>
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script>
+        function getTopCommentedBlogs() {
+    $.ajax({
+        url: '/top-commented-blogs/', // URL to your Django view for fetching top commented blogs
+        method: 'GET',
+        success: function(response) {
+            // Handle the received data
+            if (response && response.length > 0) {
+                // Assuming the response is a list of blog objects
+                response.forEach(function(blog) {
+                    // Update the UI with blog information
+                    var blogElement = '<div class="blog-item">';
+                    blogElement += '<h3>' + blog.name + '</h3>';
+                    blogElement += '<p>' + blog.content + '</p>';
+                    blogElement += '<p>Comments: ' + blog.comments_count + '</p>';
+                    blogElement += '</div>';
+                    $('#top-commented-blogs').append(blogElement);
+                });
+            } else {
+                $('#top-commented-blogs').append('<p>No top commented blogs found</p>');
+            }
+        },
+        error: function(xhr, status, error) {
+            console.error('Error fetching top commented blogs:', error);
+            // Handle error if necessary
+        }
+    });
+}
+
+    </script> <!-- Include your JavaScript file -->
+</head>
+<body>
+    <div id="top-commented-blogs">
+        <!-- Top commented blogs will be displayed here -->
+    </div>
+    <script>
+        $(document).ready(function() {
+            // Call the function to get top commented blogs when the page loads
+            getTopCommentedBlogs();
+        });
+    </script>
+</body>
+</html>

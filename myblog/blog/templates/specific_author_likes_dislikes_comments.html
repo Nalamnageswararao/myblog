@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Author Blog Statistics</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+<body>
+    <h1>Author Blog Statistics</h1>
+    <div id="blog-stats-container"></div>
+
+    <script>
+        $(document).ready(function() {
+            // Define the list of author IDs
+            var authorIds = [9, 10, 11, 12, 13, 14, 15, 16, 17, 18]; // Replace with your author IDs
+
+            // Prepare the data object with author IDs
+            var data = {
+                author_ids: authorIds
+            };
+
+            // AJAX request to fetch author blog statistics
+            $.ajax({
+                url: '/author-blog-stats/',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify(data),
+                success: function(response) {
+                    // Display blog statistics
+                    var blogStatsHtml = '';
+                    $.each(response.author_blog_stats, function(authorId, blogStats) {
+                        blogStatsHtml += '<h2>Author ID: ' + authorId + '</h2><ul>';
+                        $.each(blogStats, function(index, blog) {
+                            blogStatsHtml += '<li>' +
+                                '<strong>Blog ID:</strong> ' + blog.id + '<br>' +
+                                '<strong>Name:</strong> ' + blog.name + '<br>' +
+                                '<strong>Likes:</strong> ' + blog.likes_count + '<br>' +
+                                '<strong>Dislikes:</strong> ' + blog.dislikes_count + '<br>' +
+                                '<strong>Comments:</strong> ' + blog.comments_count + '<br>' +
+                                '</li>';
+                        });
+                        blogStatsHtml += '</ul>';
+                    });
+                    $('#blog-stats-container').html(blogStatsHtml);
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error:', error);
+                }
+            });
+        });
+    </script>
+</body>
+</html>

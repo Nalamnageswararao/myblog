@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recent Liked Blogs</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+<body>
+    <h1>Recent Liked Blogs</h1>
+    <ul id="recent-liked-blogs-list"></ul>
+
+    <script>
+        $(document).ready(function() {
+            $.ajax({
+                url: '/recent-liked-blogs/', // URL to your Django view that fetches recent liked blogs
+                type: 'GET',
+                success: function(data) {
+                    // Iterate through the recent liked blogs and append them to the list
+                    $.each(data.recent_liked_blogs, function(index, blog) {
+                        var blogItem = '<li>' +
+                            '<h3>' + blog.name + '</h3>' +
+                            '<p>' + blog.content + '</p>' +
+                            '<p>Likes: ' + blog.likes_count + '</p>' +
+                            '</li>';
+                        $('#recent-liked-blogs-list').append(blogItem);
+                    });
+                },
+                error: function(xhr, textStatus, errorThrown) {
+                    console.log('Error:', errorThrown);
+                }
+            });
+        });
+    </script>
+</body>
+</html>

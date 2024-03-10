@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog Comments</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+<body>
+    <h1>Blog Comments</h1>
+    <div id="comments-container"></div>
+
+    <script>
+        $(document).ready(function() {
+        var blogId = 1; // Replace with the actual blog ID
+
+        $.ajax({
+            url: '/get-blog-comments/' + blogId + '/',
+            type: 'GET',
+            success: function(data) {
+                var commentsHtml = '<h2>' + data.blog_name + '</h2><ul>';
+                data.comments.forEach(function(comment) {
+                    commentsHtml += '<li>' + comment.text + ' - ' + comment.created_at + '</li>';
+                });
+                commentsHtml += '</ul>';
+                $('#comments-container').html(commentsHtml);
+            },
+            error: function(xhr, status, error) {
+                console.error('Error:', error);
+            }
+        });
+    });
+    </script>
+</body>
+</html>

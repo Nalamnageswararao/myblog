@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog Dashboard</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script>
+        // Function to get CSRF token from cookies
+        function getCookie(name) {
+            var cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                var cookies = document.cookie.split(';');
+                for (var i = 0; i < cookies.length; i++) {
+                    var cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+
+        // Function to handle like button click
+        function likeBlog(blogId) {
+            var csrftoken = getCookie('csrftoken');
+            $.ajax({
+                url: '/like-blog/',
+                method: 'POST',
+                data: {
+                    'blog_id': blogId,
+                    'csrfmiddlewaretoken': csrftoken
+                },
+                success: function(response) {
+                    console.log('Blog liked');
+                },
+                error: function(xhr, status, error) {
+                    console.error(xhr.responseText);
+                }
+            });
+        }
+
+        // Function to handle dislike button click
+        function dislikeBlog(blogId) {
+            var csrftoken = getCookie('csrftoken');
+            $.ajax({
+                url: '/dislike-blog/',
+                method: 'POST',
+                data: {
+                    'blog_id': blogId,
+                    'csrfmiddlewaretoken': csrftoken
+                },
+                success: function(response) {
+                    console.log('Blog disliked');
+                },
+                error: function(xhr, status, error) {
+                    console.error(xhr.responseText);
+                }
+            });
+        }
+
+        // Function to add a comment to a blog
+        function addComment(blogId) {
+            var csrftoken = getCookie('csrftoken');
+            var commentText = $('#commentText' + blogId).val();
+            $.ajax({
+                url: '/add-comment/',
+                method: 'POST',
+                data: {
+                    'blog_id': blogId,
+                    'comment_text': commentText,
+                    'csrfmiddlewaretoken': csrftoken
+                },
+                success: function(response) {
+                    console.log('Comment added');
+                },
+                error: function(xhr, status, error) {
+                    console.error(xhr.responseText);
+                }
+            });
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h1>My Blog Dashboard</h1>
+        <h2>Blogs</h2>
+        <div id="blogs">
+            {% for blog in blogs %}
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Name : {{ blog.name }}</h5>
+                    <p class="card-text">Content : {{ blog.content }}</p>
+                    <p class="card-text">Author : {{ blog.author }}</p>
+                    <p>Likes: <span id="likesCount{{ blog.id }}">{{ blog.likes_count }}</span></p>
+                    <p>Dislikes: <span id="dislikesCount{{ blog.id }}">{{ blog.dislikes_count }}</span></p>
+                    <p>Comments: <span id="commentsCount{{ blog.id }}">{{ blog.comments_count }}</span></p>
+                    <!-- Like, Dislike, Comment buttons -->
+                    <button class="btn btn-primary" onclick="likeBlog({{ blog.id }})">Like</button>
+                    <button class="btn btn-danger" onclick="dislikeBlog({{ blog.id }})">Dislike</button>
+                    <textarea id="commentText{{ blog.id }}" rows="2" placeholder="Add a comment"></textarea>
+                    <button class="btn btn-success" onclick="addComment({{ blog.id }})">Add Comment</button><br><br>
+                    <a href="{% url 'author_blog_stats' author_id=10 %}">Blogs of specific author likes,dislikes,comments Count</a><br>
+                    <a href="{% url 'top_commented_blogs' %}">Top 5 commented Blogs of the user</a><br>
+                    <a href="{% url 'top_liked_disliked_blogs' %}">Top 5 Liked and Top 5 disliked Blogs in the last 3 days</a><br>
+                    <a href="{% url 'recent_liked_blogs' %}">My Recent 5 liked blogs</a><br>
+                    <a href="{% url 'get_blog_comments' blog_id=2 %}">My comment history for specific blogs</a><br>
+
+
+                    <a href="{% url 'author_comment_count'  %}">My comment history for a particular author</a><br>
+
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</body>
+</html>

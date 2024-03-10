@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Author Blogs Details</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+<body>
+    <h1>Author Blogs Details</h1>
+    <div id="author-blogs-details"></div>
+
+    <script>
+        $(document).ready(function() {
+            // Specify the author ID
+            var authorId = 1; // Change this to the actual author ID
+
+            // Fetch the author's blog details from the Django backend
+            $.ajax({
+                url: '/author-blog-details/' + authorId + '/',
+                type: 'GET',
+                success: function(data) {
+                    // Clear existing content
+                    $('#author-blogs-details').empty();
+
+                    // Iterate through the author's blog details and display them
+                    $.each(data.author_blogs_details, function(index, blog) {
+                        var blogDetails = '<div class="blog-details">' +
+                            '<h2>' + blog.name + '</h2>' +
+                            '<p>' + blog.content + '</p>' +
+                            '<p>Likes: ' + blog.likes_count + '</p>' +
+                            '<p>Dislikes: ' + blog.dislikes_count + '</p>' +
+                            '<p>Comments: ' + blog.comments_count + '</p>' +
+                            '</div>';
+                        $('#author-blogs-details').append(blogDetails);
+                    });
+                },
+                error: function(xhr, textStatus, errorThrown) {
+                    console.log('Error:', errorThrown);
+                }
+            });
+        });
+    </script>
+</body>
+</html>
